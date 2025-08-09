@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kartu Hasil Studi (KHS)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @media print {
+        .no-print {
+          display: none !important;
+        }
+
+        body {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+
+      .logo-style {
+        background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      }
+
+      .border-collapse {
+        border-collapse: collapse;
+      }
+
+      .khs-table th,
+      .khs-table td {
+        border: 1px solid #374151;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen mt-6">
+    <div class="max-w-6xl mx-auto p-4">
+      <!-- Form Input Section -->
+      <div class="no-print bg-white rounded-lg shadow-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
+          Input Data Mahasiswa
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <div>
+              <label
+                for="semester"
+                class="block text-sm font-semibold text-gray-700 mb-2"
+                >Semester:</label
+              >
+              <input
+                type="text"
+                id="semester"
+                value="Genap 2024/2025"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label
+                for="nim"
+                class="block text-sm font-semibold text-gray-700 mb-2"
+                >NIM:</label
+              >
+              <input
+                type="text"
+                id="nim"
+                value="202431127"
+                placeholder="Masukkan NIM"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label
+                for="nama"
+                class="block text-sm font-semibold text-gray-700 mb-2"
+                >Nama Mahasiswa:</label
+              >
+              <input
+                type="text"
+                id="nama"
+                value="Petra Juliansen Manullang"
+                placeholder="Masukkan Nama Mahasiswa"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label
+                for="pembimbing"
+                class="block text-sm font-semibold text-gray-700 mb-2"
+                >Pembimbing Akademik:</label
+              >
+              <input
+                type="text"
+                id="pembimbing"
+                value="Rosida Nur Aziza, ST., M.Eng.Sc"
+                placeholder="Masukkan Nama Pembimbing"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label
+                for="tanggal"
+                class="block text-sm font-semibold text-gray-700 mb-2"
+                >Tanggal:</label
+              >
+              <input
+                type="date"
+                id="tanggal"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label
+                for="jsonFile"
+                class="block text-sm font-semibold text-gray-700 mb-2"
+                >Upload File JSON:</label
+              >
+              <input
+                type="file"
+                id="jsonFile"
+                accept=".json"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-4 mt-6 pt-4 border-t">
+          <button
+            onclick="generateKHS()"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-lg">
+            Generate KHS
+          </button>
+          <button
+            onclick="printKHS()"
+            class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-lg">
+            Cetak / Print
+          </button>
+        </div>
+      </div>
+
+      <!-- KHS Display Section -->
+      <div id="khsSection" class="bg-white pb-12 pt-12 px-32">
+        <!-- Header with Logo -->
+        <div class="text-center pb-4 mb-6">
+          <div class="flex justify-center items-center mb-4">
+            <!-- Logo Placeholder -->
+            <div class="text-center">
+              <div class="flex items-center justify-center relative">
+                <img
+                  class="w-28 h-28 absolute left-[-200px] top-[-30px]"
+                  src="./Logo-PLN.png"
+                  alt="" />
+              </div>
+              <div class="-translate-y-6 translate-x-16">
+                <h1 class="text-xl font-bold text-gray-800">
+                  Institut Teknologi Perusahaan Listrik Negara
+                </h1>
+                <p class="text-sm text-gray-600 mt-1">
+                  Menara PLN Jalan Lingkar Luar Barat Duri Kosambi Cengkareng
+                </p>
+                <p class="text-xs text-gray-500 mt-1">
+                  Website : www.itpln.ac.id / e-Mail : rektorat@itpln.ac.id/
+                  Telepon : 0215440342
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="border-[1.1px] border-gray-400" />
+          <hr class="border-[1.1px] border-gray-400 translate-y-[3px]" />
+
+          <div class="mt-6">
+            <h2 class="text-lg font-bold text-gray-800 underline">
+              KARTU HASIL STUDI (KHS)
+            </h2>
+            <p
+              class="text-base font-semibold text-gray-700 mt-1"
+              id="semesterDisplay">
+              Ganjil 2024/2025
+            </p>
+          </div>
+        </div>
+
+        <!-- Student Information -->
+        <div class="grid grid-cols-2 gap-8 mb-6 text-sm">
+          <div class="space-y-2">
+            <div class="flex">
+              <span class="w-32 font-semibold text-gray-700">SEMESTER</span>
+              <span class="text-gray-600">: 2</span>
+            </div>
+            <div class="flex">
+              <span class="w-32 font-semibold text-gray-700">NIM</span>
+              <span class="text-gray-600" id="nimDisplay">: -</span>
+            </div>
+            <div class="flex">
+              <span class="w-32 font-semibold text-gray-700"
+                >PEMBIMBING AKADEMIK</span
+              >
+              <span class="text-gray-600" id="pembimbingDisplay">: -</span>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex">
+              <span class="w-32 font-semibold text-gray-700"
+                >PROGRAM STUDI</span
+              >
+              <span class="text-gray-600">: TEKNIK INFORMATIKA</span>
+            </div>
+            <div class="flex">
+              <span class="w-32 font-semibold text-gray-700">NAMA</span>
+              <span class="text-gray-600" id="namaDisplay">: -</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KHS Table -->
+        <div class="overflow-x-auto mb-6">
+          <table class="w-full border-collapse khs-table print-table text-sm">
+            <thead>
+              <tr>
+                <th
+                  class="py-3 px-2 text-center font-semibold"
+                  rowspan="2"
+                  style="width: 5%">
+                  No.
+                </th>
+                <th
+                  class="py-3 px-4 text-center font-semibold"
+                  rowspan="2"
+                  style="width: 35%">
+                  NAMA MATA KULIAH
+                </th>
+                <th
+                  class="py-3 px-2 text-center font-semibold"
+                  rowspan="2"
+                  style="width: 12%">
+                  KODE
+                </th>
+                <th
+                  class="py-3 px-2 text-center font-semibold"
+                  rowspan="2"
+                  style="width: 8%">
+                  SKS
+                </th>
+                <th
+                  class="py-3 px-2 text-center font-semibold"
+                  colspan="3"
+                  style="width: 25%">
+                  NILAI AKHIR
+                </th>
+                <th
+                  class="py-3 px-2 text-center font-semibold"
+                  rowspan="2"
+                  style="width: 10%">
+                  Ket
+                </th>
+              </tr>
+              <tr>
+                <th class="py-2 px-2 text-center font-semibold">HM</th>
+                <th class="py-2 px-2 text-center font-semibold">NM</th>
+                <th class="py-2 px-2 text-center font-semibold">KN</th>
+              </tr>
+            </thead>
+            <tbody id="khsTableBody" class="bg-white">
+              <!-- Data will be populated here -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Summary and Signature -->
+        <div class="flex justify-between items-end mt-8">
+          <div class="text-sm space-y-2">
+            <div class="flex">
+              <span class="w-64 font-semibold text-gray-700"
+                >Indeks Prestasi Semester (IPS)</span
+              >
+              <span class="font-bold text-gray-800" id="ipsValue">0.00</span>
+            </div>
+            <div class="flex">
+              <span class="w-64 font-semibold text-gray-700"
+                >Indeks Prestasi Kumulatif (IPK)</span
+              >
+              <span class="font-bold text-gray-800" id="ipkValue">0.00</span>
+            </div>
+            <div class="flex">
+              <span class="w-64 font-semibold text-gray-700"
+                >Beban SKS Maks Sem. yang akan Datang</span
+              >
+              <span class="font-bold text-gray-800">24</span>
+            </div>
+          </div>
+          <div class="text-center text-sm">
+            <div class="mb-16 font-light" id="tanggalDisplay">
+              Jakarta, 9 Agustus 2025
+            </div>
+            <div class="font-light -translate-y-16">
+              Ketua Prodi TEKNIK INFORMATIKA
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let jsonData = [];
+
+      // Set default date to today
+      document.getElementById("tanggal").valueAsDate = new Date();
+
+      // File upload handler
+      document
+        .getElementById("jsonFile")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              try {
+                jsonData = JSON.parse(event.target.result);
+                console.log("JSON data loaded:", jsonData);
+                alert(
+                  'File JSON berhasil dimuat! Klik "Generate KHS" untuk menampilkan data.'
+                );
+              } catch (error) {
+                alert("Error membaca file JSON: " + error.message);
+              }
+            };
+            reader.readAsText(file);
+          }
+        });
+
+      function formatDate(dateString) {
+        const months = [
+          "Januari",
+          "Februari",
+          "Maret",
+          "April",
+          "Mei",
+          "Juni",
+          "Juli",
+          "Agustus",
+          "September",
+          "Oktober",
+          "November",
+          "Desember",
+        ];
+
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+
+        return `Jakarta, ${day} ${month} ${year}`;
+      }
+
+      function generateKHS() {
+        // Validate inputs
+        const semester = document.getElementById("semester").value.trim();
+        const nim = document.getElementById("nim").value.trim();
+        const nama = document.getElementById("nama").value.trim();
+        const pembimbing = document.getElementById("pembimbing").value.trim();
+        const tanggal = document.getElementById("tanggal").value;
+
+        if (!semester || !nim || !nama || !pembimbing || !tanggal) {
+          alert("Mohon lengkapi semua data identitas mahasiswa!");
+          return;
+        }
+
+        if (jsonData.length === 0) {
+          alert("Mohon upload file JSON terlebih dahulu!");
+          return;
+        }
+
+        // Sort data: C31 dulu, lalu MKI, lalu sisanya alfabetis
+        jsonData.sort((a, b) => {
+          const getPriority = (kode) => {
+            if (kode.startsWith("C31")) return 1;
+            if (kode.startsWith("MKI")) return 2;
+            return 3;
+          };
+          const priorityA = getPriority(a.kode || "");
+          const priorityB = getPriority(b.kode || "");
+
+          if (priorityA !== priorityB) {
+            return priorityA - priorityB;
+          }
+          return (a.kode || "").localeCompare(b.kode || "");
+        });
+
+        // Update display values
+        document.getElementById("semesterDisplay").textContent = semester;
+        document.getElementById("nimDisplay").textContent = ": " + nim;
+        document.getElementById("namaDisplay").textContent =
+          ": " + nama.toUpperCase();
+
+        // Split pembimbing for two-line display
+        document.getElementById("pembimbingDisplay").textContent =
+          ": " + pembimbing;
+
+        document.getElementById("tanggalDisplay").textContent =
+          formatDate(tanggal);
+
+        // Generate table content
+        const tbody = document.getElementById("khsTableBody");
+        tbody.innerHTML = "";
+
+        let totalSKS = 0;
+        let totalKN = 0;
+        let displayNumber = 1;
+
+        jsonData.forEach((item, index) => {
+          const row = document.createElement("tr");
+          const nm = item.gpaScore || 0;
+          const kn = parseFloat((nm * item.sks).toFixed(2));
+          const status =
+            item.letterGrade && item.letterGrade !== "E"
+              ? "LULUS"
+              : "TIDAK LULUS";
+
+          totalSKS += item.sks;
+          totalKN += kn;
+
+          row.innerHTML = `
+  <td class="text-center">${displayNumber++}</td>
+  <td class="mata-kuliah">${item.name}</td>
+  <td>${item.kode || "-"}</td>
+  <td class="text-center">${item.sks}</td>
+  <td class="text-center">${item.letterGrade || "-"}</td>
+  <td class="text-center">${nm.toFixed(2)}</td>
+  <td class="text-center">${kn.toFixed(2)}</td>
+  <td class="text-center">${status}</td>
+`;
+
+          tbody.appendChild(row);
+        });
+
+        // Add total row
+        const totalRow = document.createElement("tr");
+        totalRow.className = "bg-gray-100 border-t-2 border-gray-800";
+        totalRow.innerHTML = `
+  <td class="py-3 px-2 text-center text-gray-800 font-bold" colspan="2">Jumlah</td>
+  <td></td>
+  <td class="text-center font-bold">${totalSKS}</td>
+  <td></td>
+  <td></td>
+  <td class="text-center font-bold">${totalKN.toFixed(1)}</td>
+  <td></td>
+`;
+
+        tbody.appendChild(totalRow);
+
+        // Calculate IPS and IPK
+        const ips = totalSKS > 0 ? (totalKN / totalSKS).toFixed(2) : "0.00";
+        document.getElementById("ipsValue").textContent = ips;
+        document.getElementById("ipkValue").textContent = ips; // Simplified: IPK = IPS
+
+        // Show KHS section
+        document.getElementById("khsSection").classList.remove("hidden");
+
+        // Scroll to KHS section
+        document.getElementById("khsSection").scrollIntoView({
+          behavior: "smooth",
+        });
+      }
+
+      function printKHS() {
+        if (
+          document.getElementById("khsSection").classList.contains("hidden")
+        ) {
+          alert("Mohon generate KHS terlebih dahulu sebelum mencetak!");
+          return;
+        }
+
+        window.print();
+      }
+    </script>
+  </body>
+</html>
